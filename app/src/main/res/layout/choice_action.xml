@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="Choice Action"
                 android:textSize="20sp"
-                android:textColor="@color/teal_700"/>
+                android:textColor="@color/deep_teal"/>
 
             <TextView
                 android:id="@+id/save"
@@ -47,7 +47,7 @@
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
-                android:textColor="@color/teal_700"/>
+                android:textColor="@color/deep_teal"/>
         </LinearLayout>
         <LinearLayout
             android:padding="10dp"

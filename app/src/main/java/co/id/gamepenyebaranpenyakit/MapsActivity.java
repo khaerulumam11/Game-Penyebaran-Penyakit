@@ -7,6 +7,10 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,24 +22,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import co.id.gamepenyebaranpenyakit.bottomSheet.ChoiceAction;
+import co.id.gamepenyebaranpenyakit.model.CaseModel;
+import co.id.gamepenyebaranpenyakit.model.UserModel;
+import co.id.gamepenyebaranpenyakit.util.Server;
 
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleMap.OnPolygonClickListener {
 
     ChoiceAction choiceAction;
-    private int changesPoin = 5;
+    private int changesPoin = 10;
     private int sosialisasiPoin =0;
     private  int preventifPoin =0;
     private  int foggingPoin =0;
     private  int totalSkor =0;
     private Handler mHandler;
+    private Gson gson;
+    private List<CaseModel.ResultEntity> list = new ArrayList<>();
 
     private static final int COLOR_WHITE_ARGB = 0xffffffff;
     private static final int COLOR_GREEN_ARGB = 0xff388E3C;
@@ -48,7 +62,7 @@ public class MapsActivity extends AppCompatActivity implements
     private static final int PATTERN_GAP_LENGTH_PX = 20;
     private static final PatternItem DOT = new Dot();
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
-    private Polygon polygon1;
+    private Polygon polygon1,polygon2,polygon3;
 
     private static final int POLYGON_STROKE_WIDTH_PX = 8;
     private static final int PATTERN_DASH_LENGTH_PX = 20;
@@ -75,49 +89,59 @@ public class MapsActivity extends AppCompatActivity implements
         choiceAction = new ChoiceAction(this);
         this.mHandler = new Handler();
 
-        this.mHandler.postDelayed(m_Runnable,2000);
+//        this.mHandler.postDelayed(m_Runnable,2000);
     }
 
-    private final Runnable m_Runnable = new Runnable()
-    {
-        List<PatternItem> pattern = null;
-        int strokeColor = COLOR_BLACK_ARGB;
-        int fillColor = COLOR_WHITE_ARGB;
-        public void run()
-
-        {
-//            Toast.makeText(MapsActivity.this,"in runnable",Toast.LENGTH_SHORT).show();
-            if (totalSkor > 70){
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_GREEN_ARGB;
-                fillColor = COLOR_GREEN_ARGB;
-            }
-            else if (totalSkor > 60 && totalSkor <=70){
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_GREEN_ARGB;
-                fillColor = COLOR_GREEN_ARGB;
-            } else if (totalSkor > 30 && totalSkor <= 60){
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_ORANGE_ARGB;
-                fillColor = COLOR_ORANGE_ARGB;
-            } else {
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_RED_ARGB;
-                fillColor = COLOR_RED_ARGB;
-            }
-            polygon1.setStrokePattern(pattern);
-            polygon1.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
-            polygon1.setStrokeColor(strokeColor);
-            polygon1.setFillColor(fillColor);
-            MapsActivity.this.mHandler.postDelayed(m_Runnable, 2000);
-        }
-
-    };//runnable
+//    private final Runnable m_Runnable = new Runnable()
+//    {
+//        List<PatternItem> pattern = null;
+//        int strokeColor = COLOR_BLACK_ARGB;
+//        int fillColor = COLOR_WHITE_ARGB;
+//        public void run()
+//
+//        {
+////            Toast.makeText(MapsActivity.this,"in runnable",Toast.LENGTH_SHORT).show();
+//            if (totalSkor > 70){
+//                pattern = PATTERN_POLYGON_ALPHA;
+//                strokeColor = COLOR_GREEN_ARGB;
+//                fillColor = COLOR_GREEN_ARGB;
+//            }
+//            else if (totalSkor > 60 && totalSkor <=70){
+//                pattern = PATTERN_POLYGON_ALPHA;
+//                strokeColor = COLOR_GREEN_ARGB;
+//                fillColor = COLOR_GREEN_ARGB;
+//            } else if (totalSkor > 30 && totalSkor <= 60){
+//                pattern = PATTERN_POLYGON_ALPHA;
+//                strokeColor = COLOR_ORANGE_ARGB;
+//                fillColor = COLOR_ORANGE_ARGB;
+//            } else {
+//                pattern = PATTERN_POLYGON_ALPHA;
+//                strokeColor = COLOR_RED_ARGB;
+//                fillColor = COLOR_RED_ARGB;
+//            }
+//            polygon1.setStrokePattern(pattern);
+//            polygon1.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
+//            polygon1.setStrokeColor(strokeColor);
+//            polygon1.setFillColor(fillColor);
+//
+//            polygon2.setStrokePattern(pattern);
+//            polygon2.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
+//            polygon2.setStrokeColor(strokeColor);
+//            polygon2.setFillColor(fillColor);
+//
+//            polygon3.setStrokePattern(pattern);
+//            polygon3.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
+//            polygon3.setStrokeColor(strokeColor);
+//            polygon3.setFillColor(fillColor);
+//            MapsActivity.this.mHandler.postDelayed(m_Runnable, 2000);
+//        }
+//
+//    };//runnable
 
     @Override
     protected void onPause() {
         super.onPause();
-        mHandler.removeCallbacks(m_Runnable);
+//        mHandler.removeCallbacks(m_Runnable);
         finish();
 
     }
@@ -300,6 +324,13 @@ public class MapsActivity extends AppCompatActivity implements
                 strokeColor = COLOR_ORANGE_ARGB;
                 fillColor = COLOR_BLUE_ARGB;
                 break;
+
+            case "teta":
+                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
+                pattern = PATTERN_POLYGON_BETA;
+                strokeColor = COLOR_GREEN_ARGB;
+                fillColor = COLOR_GREEN_ARGB;
+                break;
         }
 
         polygon.setStrokePattern(pattern);
@@ -309,6 +340,8 @@ public class MapsActivity extends AppCompatActivity implements
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        getDataCase();
+
         Polygon polygon1 = googleMap.addPolygon(new PolygonOptions()
                 .clickable(true)
                 .add(
@@ -321,6 +354,32 @@ public class MapsActivity extends AppCompatActivity implements
         // [END maps_poly_activity_add_polygon]
         // Style the polygon.
         stylePolygon(polygon1);
+
+        Polygon polygon2 = googleMap.addPolygon(new PolygonOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(-8.216462, 112.588504),
+                        new LatLng(-8.230874, 112.605279),
+                        new LatLng(-8.2603437,112.6042053),
+                        new LatLng(-8.252492, 112.578939)));
+        // Store a data object with the polygon, used here to indicate an arbitrary type.
+        polygon2.setTag("beta");
+        // [END maps_poly_activity_add_polygon]
+        // Style the polygon.
+        stylePolygon(polygon2);
+
+        Polygon polygon3 = googleMap.addPolygon(new PolygonOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(-8.135891, 112.549022),
+                        new LatLng(-8.147829, 112.572496),
+                        new LatLng(-8.156325, 112.554043),
+                        new LatLng(-8.145280, 112.541726)));
+        // Store a data object with the polygon, used here to indicate an arbitrary type.
+        polygon3.setTag("teta");
+        // [END maps_poly_activity_add_polygon]
+        // Style the polygon.
+        stylePolygon(polygon3);
 
 //        Polygon polygon2 = googleMap.addPolygon(new PolygonOptions()
 //                .clickable(true)
@@ -339,5 +398,30 @@ public class MapsActivity extends AppCompatActivity implements
 
         // Set listeners for click events.
         googleMap.setOnPolygonClickListener(this);
+    }
+
+    private void getDataCase() {
+        list.clear();
+        AndroidNetworking.post(Server.ENDPOINT_GET_CASE)
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+//                        setIsLoading(false);
+                        GsonBuilder gsonBuilder = new GsonBuilder().serializeNulls();
+                        gson = gsonBuilder.create();
+                        System.out.println("Response "+response.toString());
+                        CaseModel courseRespMdl = gson.fromJson(String.valueOf(response), CaseModel.class);
+                        if (courseRespMdl.getResult() != null) {
+                            list.addAll(courseRespMdl.getResult());
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        System.out.println("Erorr Data");
+                    }
+                });
     }
 }
