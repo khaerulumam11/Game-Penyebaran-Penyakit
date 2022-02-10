@@ -14,175 +14,289 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         >
         <LinearLayout
-            android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:padding="10dp"
+            android:id="@+id/toolbarLy"
+            android:background="#8d1c07"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
                 android:id="@+id/close"
                 android:layout_marginTop="5dp"
-                android:layout_weight="4"
+                android:layout_weight="7"
                 android:layout_gravity="left"
                 android:layout_marginRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="26dp"
-                app:srcCompat="@drawable/ic_baseline_close_24"
+                app:srcCompat="@drawable/ic_baseline_keyboard_arrow_down_white_24"
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Choice Action"
                 android:textSize="20sp"
-                android:textColor="@color/deep_teal"/>
+                android:textColor="@color/white"/>
 
-            <TextView
-                android:id="@+id/save"
-                android:layout_weight="3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Save"
-                android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:textSize="20sp"
-                android:textColor="@color/deep_teal"/>
         </LinearLayout>
         <LinearLayout
             android:padding="10dp"
+            android:id="@+id/contentLy"
+            android:background="#8d1c07"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/totalPenyebaran"
+                android:id="@+id/dateSekarang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Penyebaran Kasus : "
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
+                android:text="DATE : "
+                android:layout_gravity="left"
+                android:layout_marginBottom="20dp"
+                android:textColor="#ffff00"
                 android:textSize="18sp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Poin"
-                android:id="@+id/poinChanges"
+                android:text="TOTAL CASE : "
+                android:id="@+id/caseTotal"
+                android:textStyle="bold"
+                android:textColor="#7ed957"
                 android:layout_marginBottom="20dp"
                 android:textSize="20sp"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-            <LinearLayout
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1.3"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sosialisasi"
+                    android:text="CHANGES POIN   : "
                     android:layout_gravity="center"
-                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:layout_marginBottom="20dp"
-                    android:textSize="18sp"/>
-
-                <Button
-                    android:id="@+id/plusSosialisasi"
-                    android:text="+"
-                    android:textSize="25sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="20sp"/>
                 <TextView
-                    android:id="@+id/skorSosilisasi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:textSize="30sp"/>
-                <Button
-                    android:id="@+id/minusSosilisasi"
-                    android:text="-"
-                    android:textSize="25sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Preventif"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="20dp"
-                    android:textSize="18sp"/>
-
-                <Button
-                    android:id="@+id/plusPreventif"
-                    android:text="+"
-                    android:textSize="25sp"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:id="@+id/skorPreventif"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:textSize="30sp"/>
-                <Button
-                    android:id="@+id/minusPreventif"
-                    android:text="-"
-                    android:textSize="25sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-                <LinearLayout
                     android:layout_weight="1"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:padding="8dp"
+                    android:background="@drawable/et_login_style"
+                    android:layout_marginRight="30dp"
+                    android:id="@+id/poinChanges"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Fogging"
-                        android:layout_gravity="center"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="20dp"
-                        android:textSize="18sp"/>
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Socialization"
+                            android:textStyle="bold"
+                            android:textColor="#38b6ff"
+                            android:layout_marginBottom="20dp"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="20dp"
+                            android:padding="8dp"
+                            android:textAlignment="center"
+                            android:background="@drawable/et_login_style"
+                            android:id="@+id/poinSosialisasi"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:gravity="center_horizontal" />
+                    </LinearLayout>
 
-                    <Button
-                        android:id="@+id/plusFogging"
-                        android:text="+"
-                        android:textSize="25sp"
+                    <SeekBar
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:id="@+id/seekbarSosialisasi"
+                        android:thumbTint="@color/white"
+                        android:progressTint="@color/white"
+                        android:progressBackgroundTint="@color/white"
+                        android:secondaryProgressTint="@color/white"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0"
-                        android:id="@+id/skorFogging"
-                        android:layout_gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="30sp"/>
-                    <Button
-                        android:id="@+id/minusFogging"
-                        android:text="-"
-                        android:textSize="25sp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="12dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:layout_marginRight="18dp"
+                            android:gravity="end"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Preventive"
+                            android:textStyle="bold"
+                            android:textColor="#7ed957"
+                            android:layout_marginBottom="20dp"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="35dp"
+                            android:padding="8dp"
+                            android:textAlignment="center"
+                            android:background="@drawable/et_login_style"
+                            android:id="@+id/poinPreventif"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:gravity="center_horizontal" />
+                    </LinearLayout>
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:id="@+id/seekbarPreventif"
+                        android:thumbTint="@color/white"
+                        android:progressTint="@color/white"
+                        android:progressBackgroundTint="@color/white"
+                        android:secondaryProgressTint="@color/white"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="12dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:layout_marginRight="18dp"
+                            android:gravity="end"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"/>
+                    </LinearLayout>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fogging"
+                            android:textStyle="bold"
+                            android:textColor="#ff914d"
+                            android:layout_marginBottom="20dp"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="53dp"
+                            android:padding="8dp"
+                            android:textAlignment="center"
+                            android:background="@drawable/et_login_style"
+                            android:id="@+id/poinFogging"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:gravity="center_horizontal" />
+                    </LinearLayout>
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:id="@+id/seekbarFogging"
+                        android:thumbTint="@color/white"
+                        android:progressTint="@color/white"
+                        android:progressBackgroundTint="@color/white"
+                        android:secondaryProgressTint="@color/white"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="12dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:layout_marginRight="18dp"
+                            android:gravity="end"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"/>
+                    </LinearLayout>
                 </LinearLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btn_save"
+                    style="@style/LoginBtn"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="@dimen/space_16dp"
+                    android:paddingStart="@dimen/content_margin"
+                    android:paddingTop="@dimen/space_16dp"
+                    android:paddingEnd="@dimen/content_margin"
+                    android:paddingBottom="@dimen/space_16dp"
+                    android:text="Save"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#8d1c07"
+                    android:textColor="@color/white" />
+            </LinearLayout>
             </LinearLayout>
     </LinearLayout>

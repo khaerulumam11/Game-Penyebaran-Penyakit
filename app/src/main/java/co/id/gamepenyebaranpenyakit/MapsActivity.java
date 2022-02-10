@@ -2,9 +2,17 @@ package co.id.gamepenyebaranpenyakit;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -25,11 +33,15 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import co.id.gamepenyebaranpenyakit.bottomSheet.ChoiceAction;
@@ -42,7 +54,7 @@ public class MapsActivity extends AppCompatActivity implements
         GoogleMap.OnPolygonClickListener {
 
     ChoiceAction choiceAction;
-    private int changesPoin = 10;
+    private int changesPoin = 0;
     private int sosialisasiPoin =0;
     private  int preventifPoin =0;
     private  int foggingPoin =0;
@@ -63,6 +75,12 @@ public class MapsActivity extends AppCompatActivity implements
     private static final PatternItem DOT = new Dot();
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
     private Polygon polygon1,polygon2,polygon3;
+    private ImageView imgBack;
+    SharedPreferences sharedpreferences;
+    private TextView txtLokasi;
+    private LinearLayout choiceLy, toolbarLy;
+    public static final String my_shared_preferences = "my_shared_preferences";
+    private String polygonSet="";
 
     private static final int POLYGON_STROKE_WIDTH_PX = 8;
     private static final int PATTERN_DASH_LENGTH_PX = 20;
@@ -74,6 +92,7 @@ public class MapsActivity extends AppCompatActivity implements
     // Create a stroke pattern of a dot followed by a gap, a dash, and another gap.
     private static final List<PatternItem> PATTERN_POLYGON_BETA =
             Arrays.asList(DOT, GAP, DASH, GAP);
+    MediaPlayer ring;
 
 
     @Override
@@ -85,7 +104,33 @@ public class MapsActivity extends AppCompatActivity implements
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
+        
+        imgBack = findViewById(R.id.back);
+        toolbarLy = findViewById(R.id.toolbarLy);
+        choiceLy = findViewById(R.id.choiceLy);
+        txtLokasi = findViewById(R.id.txtLocation);
+        sharedpreferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
+        ring= MediaPlayer.create(MapsActivity.this,R.raw.backsound);
+        ring.start();
+        ring.setLooping(true);
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
+        choiceLy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (polygonSet.isEmpty()){
+                    Toast.makeText(MapsActivity.this, "Please choose affected area", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        choiceLy.getBackground().setAlpha(220);
+        toolbarLy.getBackground().setAlpha(200);
         choiceAction = new ChoiceAction(this);
         this.mHandler = new Handler();
 
@@ -142,158 +187,245 @@ public class MapsActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
 //        mHandler.removeCallbacks(m_Runnable);
-        finish();
-
+        ring.pause();
+        ring.setLooping(false);
     }
 
     @Override
     public void onPolygonClick(Polygon polygon) {
-
-        showAction(98);
+        System.out.println("Name Polygon "+polygon.getTag());
+        if (polygon.getTag().equals("alpha")){
+            txtLokasi.setText("Pandaan, Malang Kabupaten");
+            showAction(125, polygon.getTag().toString());
+            choiceAction.contentLy.getBackground().setAlpha(200);
+        } else if (polygon.getTag().equals("beta")){
+            txtLokasi.setText("Wonokerto, Malang Kabupaten");
+            showAction(90, polygon.getTag().toString());
+            choiceAction.contentLy.getBackground().setAlpha(200);
+        } else if (polygon.getTag().equals("teta")){
+            txtLokasi.setText("Kanjuruhan, Malang Kabupaten");
+            Toast.makeText(MapsActivity.this, "This area is not affected dengue virus", Toast.LENGTH_SHORT).show();
+        }
+        choiceLy.setVisibility(View.GONE);
 
     }
 
-    private void showAction(int kasus) {
+    private void showAction(int kasus, String daerah) {
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
+        choiceAction.txtDate.setText("Date "+sdf.format(now));
+        changesPoin = Integer.parseInt(getIntent().getStringExtra("chance"));
         choiceAction.totalPenyebaran.setText("Total Kasus : "+kasus);
-        choiceAction.poinChanges.setText("Poin Changes : "+changesPoin);
-        choiceAction.plusSosilisasi.setOnClickListener(new View.OnClickListener() {
+        choiceAction.poinChanges.setText(""+changesPoin);
+        choiceAction.seekSosilisasi.setMax(changesPoin);
+        choiceAction.seekSosilisasi.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int valueProgress =0;
             @Override
-            public void onClick(View view) {
-                if (changesPoin <=0){
-                    Toast.makeText(MapsActivity.this, "Anda sudah menggunakan semua changes poin", Toast.LENGTH_SHORT).show();
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+               valueProgress =i;
+               choiceAction.skorSosilisasi.setText(String.valueOf(valueProgress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (choiceAction.seekSosilisasi.getProgress() > changesPoin){
+                    Toast.makeText(MapsActivity.this, "You've used up all the change points", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (sosialisasiPoin >= 2) {
-                        Toast.makeText(MapsActivity.this, "Maksimal untuk aksi ini", Toast.LENGTH_SHORT).show();
-                    } else {
-                        sosialisasiPoin += 1;
-                        changesPoin -= 1;
-                        choiceAction.poinChanges.setText("Poin Changes : " + changesPoin);
-                        choiceAction.skorSosilisasi.setText(String.valueOf(sosialisasiPoin));
-                    }
+                    sosialisasiPoin += choiceAction.seekSosilisasi.getProgress();
+                    changesPoin -= choiceAction.seekSosilisasi.getProgress();
+                    choiceAction.poinChanges.setText("" + changesPoin);
                 }
             }
         });
-        choiceAction.minusSosilisasi.setOnClickListener(new View.OnClickListener() {
+
+        choiceAction.seekPreventif.setMax(changesPoin);
+        choiceAction.seekPreventif.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressValue =0;
             @Override
-            public void onClick(View view) {
-                if (changesPoin < 0){
-                    Toast.makeText(MapsActivity.this, "Anda sudah menggunakan semua changes poin", Toast.LENGTH_SHORT).show();
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                progressValue = i;
+                choiceAction.skorPreventif.setText(String.valueOf(progressValue));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (choiceAction.seekPreventif.getProgress() > changesPoin){
+                    Toast.makeText(MapsActivity.this, "You've used up all the change points", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (sosialisasiPoin <= 0) {
-                        Toast.makeText(MapsActivity.this, "Minimum untuk aksi ini", Toast.LENGTH_SHORT).show();
-                    } else {
-                        sosialisasiPoin -= 1;
-                        changesPoin += 1;
-                        choiceAction.poinChanges.setText("Poin Changes : " + changesPoin);
-                        choiceAction.skorSosilisasi.setText(String.valueOf(sosialisasiPoin));
-                    }
+                    preventifPoin += choiceAction.seekPreventif.getProgress();
+                    changesPoin -= choiceAction.seekPreventif.getProgress();
+                    choiceAction.poinChanges.setText("" + changesPoin);
+
                 }
             }
         });
-        choiceAction.plusPreventif.setOnClickListener(new View.OnClickListener() {
+
+
+        choiceAction.seekFogging.setMax(changesPoin);
+        choiceAction.seekFogging.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int valueProgress=0;
             @Override
-            public void onClick(View view) {
-                if (changesPoin <=0){
-                    Toast.makeText(MapsActivity.this, "Anda sudah menggunakan semua changes poin", Toast.LENGTH_SHORT).show();
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                valueProgress = i;
+                choiceAction.skorFogging.setText(String.valueOf(valueProgress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (choiceAction.seekFogging.getProgress() > changesPoin){
+                    Toast.makeText(MapsActivity.this, "You've used up all the change points", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (preventifPoin >= 2) {
-                        Toast.makeText(MapsActivity.this, "Maksimal untuk aksi ini", Toast.LENGTH_SHORT).show();
-                    } else {
-                        preventifPoin += 1;
-                        changesPoin -= 1;
-                        choiceAction.poinChanges.setText("Poin Changes : " + changesPoin);
-                        choiceAction.skorPreventif.setText(String.valueOf(preventifPoin));
-                    }
+                    foggingPoin += choiceAction.seekFogging.getProgress();
+                    changesPoin -= choiceAction.seekFogging.getProgress();
+                    choiceAction.skorFogging.setText(String.valueOf(choiceAction.seekFogging.getProgress()));
+                    choiceAction.poinChanges.setText("" + changesPoin);
                 }
             }
         });
-        choiceAction.minusPreventif.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (changesPoin <0){
-                    Toast.makeText(MapsActivity.this, "Anda sudah menggunakan semua changes poin", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (preventifPoin <= 0) {
-                        Toast.makeText(MapsActivity.this, "Minimum untuk aksi ini", Toast.LENGTH_SHORT).show();
-                    } else {
-                        preventifPoin -= 1;
-                        changesPoin += 1;
-                        choiceAction.poinChanges.setText("Poin Changes : " + changesPoin);
-                        choiceAction.skorPreventif.setText(String.valueOf(preventifPoin));
-                    }
-                }
-            }
-        });
-        choiceAction.plusFogging.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (changesPoin <=0){
-                    Toast.makeText(MapsActivity.this, "Anda sudah menggunakan semua changes poin", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (foggingPoin >= 2) {
-                        Toast.makeText(MapsActivity.this, "Maksimal untuk aksi ini", Toast.LENGTH_SHORT).show();
-                    } else {
-                        foggingPoin += 1;
-                        changesPoin -= 1;
-                        choiceAction.poinChanges.setText("Poin Changes : " + changesPoin);
-                        choiceAction.skorFogging.setText(String.valueOf(foggingPoin));
-                    }
-                }
-            }
-        });
-        choiceAction.minusFogging.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (changesPoin <0){
-                    Toast.makeText(MapsActivity.this, "Anda sudah menggunakan semua changes poin", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (foggingPoin <= 0) {
-                        Toast.makeText(MapsActivity.this, "Minimum untuk aksi ini", Toast.LENGTH_SHORT).show();
-                    } else {
-                        foggingPoin -= 1;
-                        changesPoin += 1;
-                        choiceAction.poinChanges.setText("Poin Changes : " + changesPoin);
-                        choiceAction.skorFogging.setText(String.valueOf(foggingPoin));
-                    }
-                }
-            }
-        });
+
 
         choiceAction.save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (sosialisasiPoin <= 0){
-                    Toast.makeText(MapsActivity.this, "Anda harus memasukkan poin untuk sosialisasi", Toast.LENGTH_SHORT).show();
-                } else if (foggingPoin <=0){
-                    Toast.makeText(MapsActivity.this, "Anda harus memasukkan poin untuk fogging", Toast.LENGTH_SHORT).show();
-                } else if (preventifPoin <=0){
-                    Toast.makeText(MapsActivity.this, "Anda harus memasukkan poin untuk preventif", Toast.LENGTH_SHORT).show();
+                int maxSosialiasi=0;
+                int maxPreventif =0;
+                int maxFogging =0;
+                double persentaseSosialisasi = 0.0;
+                double persentasePreventif = 0.0;
+                double persentaseFogging = 0.0;
+                if (daerah.equalsIgnoreCase("alpha")){
+                    persentaseSosialisasi = 0.3;
+                    maxSosialiasi = 3;
+                    persentasePreventif = 0.3;
+                    maxPreventif =3;
+                    persentaseFogging = 0.4;
+                    maxFogging = 4;
                 } else {
-                    if (sosialisasiPoin == 1){
-                        totalSkor+=5;
-                    } else if (sosialisasiPoin == 2){
-                        totalSkor+=10;
-                    }
-
-                    if (preventifPoin == 1){
-                        totalSkor+=10;
-                    } else if (preventifPoin == 2){
-                        totalSkor+=20;
-                    }
-
-                    if (foggingPoin == 1){
-                        totalSkor+=30;
-                    } else if (foggingPoin == 2){
-                        totalSkor+=40;
-                    }
-                    System.out.println("Total Skor "+totalSkor);
-                    choiceAction.hide();
-
+                    persentaseSosialisasi = 0.5;
+                    maxSosialiasi = 5;
+                    persentasePreventif = 0.4;
+                    maxPreventif =4;
+                    persentaseFogging = 0.1;
+                    maxFogging = 1;
                 }
-            }
+                    if (sosialisasiPoin > maxSosialiasi){
+                        int hitung = maxSosialiasi * 10;
+                        totalSkor+=hitung;
+                    } else if (sosialisasiPoin == maxSosialiasi){
+                        int hitung = maxSosialiasi * 10;
+                        totalSkor+=hitung;
+                    } else {
+                        int hitung = (int)(persentaseSosialisasi * Double.parseDouble(choiceAction.skorSosilisasi.getText().toString()));
+                        totalSkor+=hitung;
+                    }
+
+                if (preventifPoin > maxPreventif){
+                    int hitung = maxPreventif * 10;
+                    totalSkor+=hitung;
+                } else if (preventifPoin == maxPreventif){
+                    int hitung = maxPreventif * 10;
+                    totalSkor+=hitung;
+                } else {
+                    int hitung = (int)(persentasePreventif * Double.parseDouble(choiceAction.skorPreventif.getText().toString()));
+                    totalSkor+=hitung;
+                }
+
+                if (foggingPoin > maxFogging){
+                    int hitung = maxFogging * 10;
+                    totalSkor+=hitung;
+                } else if (foggingPoin == maxFogging){
+                    int hitung = maxFogging * 10;
+                    totalSkor+=hitung;
+                } else {
+                    int hitung = (int)(persentaseFogging * Double.parseDouble(choiceAction.skorFogging.getText().toString()));
+                    totalSkor+=hitung;
+                }
+                    System.out.println("Total Skor "+totalSkor);
+                if (totalSkor == 100){
+                    int chance = Integer.parseInt(getIntent().getStringExtra("chance")) + 10;
+                    updateDataScore(totalSkor, chance);
+                } else {
+                    int chance = Integer.parseInt(getIntent().getStringExtra("chance")) + 3;
+                    updateDataScore(totalSkor, chance);
+                }
+                }
         });
-        choiceAction.setCanceledOnTouchOutside(true);
+        choiceAction.setCanceledOnTouchOutside(false);
         choiceAction.show();
+    }
+
+    private void updateDataScore(int totalSkor, int chance) {
+        AndroidNetworking.post(Server.ENDPOINT_UPDATE_SCORE+getIntent().getStringExtra("id"))
+                .addBodyParameter("chance", String.valueOf(chance))
+                .addBodyParameter("score",String.valueOf(totalSkor))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+//                        setIsLoading(false);
+                        try {
+                            if (response.getString("message").equalsIgnoreCase("success")) {
+                                System.out.println("Response " + response.toString());
+                                getDetailUser();
+                            } else {
+                                Toast.makeText(MapsActivity.this, "Update Score Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        System.out.println("Erorr " + anError.getMessage());
+                    }
+                });
+    }
+
+    private void getDetailUser() {
+        AndroidNetworking.post(Server.ENDPOINT_GET_DETAIL_USER+getIntent().getStringExtra("id"))
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+//                        setIsLoading(false);
+                        System.out.println("Response "+response.toString());
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        try {
+                            editor.putString("chance", response.getString("chance"));
+                            editor.putString("score", response.getString("score"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        editor.commit();
+                        System.out.println("Chance Now : "+ sharedpreferences.getString("chance", null));
+                        // Memanggil main activity
+                        choiceAction.hide();
+                        choiceLy.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        System.out.println("Erorr Get Data");
+                    }
+                });
     }
 
 
@@ -394,7 +526,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         // Position the map's camera near Alice Springs in the center of Australia,
         // and set the zoom factor so most of Australia shows on the screen.
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-7.9784695,112.5617425), 10));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-8.230874, 112.605279), 12));
 
         // Set listeners for click events.
         googleMap.setOnPolygonClickListener(this);
@@ -424,4 +556,20 @@ public class MapsActivity extends AppCompatActivity implements
                     }
                 });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ring.start();
+        ring.setLooping(true);
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ring.stop();
+        ring.setLooping(false);
+    }
+
 }

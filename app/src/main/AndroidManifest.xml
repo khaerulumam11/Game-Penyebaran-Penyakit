@@ -3,6 +3,7 @@
     package="co.id.gamepenyebaranpenyakit">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,15 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GamePenyebaranPenyakit"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ListScoreUser"></activity>
-        <activity android:name=".RegistrasiActivity" />
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".SplashscreenActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ListScoreUser" />
+        <activity android:name=".RegistrasiActivity" />
+        <activity android:name=".LoginActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -28,7 +32,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAx_6yfb4gr0QPV8gwGrQxC6YGGEUmzquY" />
 
-        <activity android:name=".MapsActivity"></activity>
+        <activity android:name=".MapsActivity" />
         <activity android:name=".MainActivity" />
     </application>
 

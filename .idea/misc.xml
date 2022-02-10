@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/ADMIN/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/select_dialog_item.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/drawable/bg_login_btn.xml" value="0.209375" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/drawable/et_login_style.xml" value="0.209375" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/layout/activity_list_score_user.xml" value="0.19322916666666667" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/layout/activity_login.xml" value="0.22" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/layout/activity_maps.xml" value="0.22" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/layout/activity_registrasi.xml" value="0.25" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/layout/activity_splashscreen.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/ADMIN/StudioProjects/Game-Penyebaran-Penyakit/app/src/main/res/layout/choice_action.xml" value="0.10847457627118644" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

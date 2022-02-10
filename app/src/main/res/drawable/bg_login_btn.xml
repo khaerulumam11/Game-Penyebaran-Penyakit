@@ -21,7 +21,7 @@
                 tools:targetApi="lollipop">
                 <shape android:shape="rectangle">
                     <solid android:color="@color/ripple_color" />
-                    <corners android:radius="@dimen/register_btn_r"/>
+                    <corners android:radius="9dp"/>
 
                 </shape>
             </item>

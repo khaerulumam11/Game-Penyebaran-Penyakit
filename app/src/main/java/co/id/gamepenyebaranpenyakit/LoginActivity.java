@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText etEmail, etPassword;
     AppCompatTextView btnLogin, btnRegis;
     ConnectivityManager conMgr;
-    String id, email;
+    String id, email, name, chance, level, score;
     ProgressDialog pDialog;
     SharedPreferences sharedpreferences;
     Boolean session = false;
@@ -63,11 +63,18 @@ public class LoginActivity extends AppCompatActivity {
         session = sharedpreferences.getBoolean(session_status, false);
         id = sharedpreferences.getString("id", null);
         email = sharedpreferences.getString("email", null);
+        name = sharedpreferences.getString("name", null);
+        chance = sharedpreferences.getString("chance", null);
+        level = sharedpreferences.getString("level", null);
+        score = sharedpreferences.getString("score", null);
 
         if (session) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("id", id);
             intent.putExtra("email", email);
+            intent.putExtra("name", name);
+            intent.putExtra("chance", chance);
+            intent.putExtra("level", level);
             startActivity(intent);
             finish();
         }
@@ -120,7 +127,15 @@ public class LoginActivity extends AppCompatActivity {
                         System.out.println("Response "+response.toString());
                         SharedPreferences.Editor editor = sharedpreferences.edit();
                         editor.putBoolean(session_status, true);
-                        editor.putString("id", id);
+                        try {
+                            editor.putString("id", response.getString("id"));
+                            editor.putString("name", response.getString("name"));
+                            editor.putString("chance", response.getString("chance"));
+                            editor.putString("score", response.getString("score"));
+                            editor.putString("level", response.getString("level"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         editor.putString("email", email);
                         editor.commit();
 

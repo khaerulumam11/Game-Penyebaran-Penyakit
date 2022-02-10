@@ -41,7 +41,15 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.Commen
         UserModel.ResultEntity cur = list.get(position);
         holder.txtName.setText("Name : "+cur.getName());
         holder.txtEmail.setText("Email : "+cur.getEmail());
-        holder.txtLevel.setText("Level : "+cur.getLevel());
+        holder.txtEmail.setVisibility(View.GONE);
+        if (cur.getLevel().equalsIgnoreCase("1")){
+            holder.txtLevel.setText("Level : Beginner");
+        } else if (cur.getLevel().equalsIgnoreCase("2")){
+            holder.txtLevel.setText("Level : Intermediate");
+        } else {
+            holder.txtLevel.setText("Level : Advance");
+        }
+
         holder.txtScore.setText("Score : "+cur.getScore());
 //        Glide.with(con).load(cur.getAvatar()).
 //                apply(RequestOptions.circleCropTransform().placeholder(R.drawable.ic_account_circle_grey_24dp)).into(holder.gambar);

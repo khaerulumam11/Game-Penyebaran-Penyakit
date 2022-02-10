@@ -43,6 +43,8 @@ dependencies {
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
     implementation 'com.github.scottyab:showhidepasswordedittext:0.8'
     implementation "com.squareup.okhttp3:okhttp:4.9.0"
+    implementation 'com.weiwangcn.betterspinner:library-material:1.1.0'
+    implementation 'com.weiwangcn.betterspinner:library:1.1.0'
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
 }
 

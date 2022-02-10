@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,9 +18,10 @@ import co.id.gamepenyebaranpenyakit.R;
 
 public class ChoiceAction extends BottomSheetDialog {
     private Context context;
-    public TextView totalPenyebaran,poinChanges, skorSosilisasi, skorPreventif, skorFogging,save;
-    public Button  plusSosilisasi, plusPreventif, plusFogging,minusSosilisasi, minusPreventif, minusFogging;
-
+    public TextView totalPenyebaran,poinChanges, skorSosilisasi, skorPreventif, skorFogging,save, txtDate;
+    public SeekBar seekSosilisasi, seekPreventif, seekFogging;
+    public LinearLayout contentLy;
+    ImageView closeButton;
     @SuppressLint("StaticFieldLeak")
     private static ChoiceAction instance;
 
@@ -49,26 +52,19 @@ public class ChoiceAction extends BottomSheetDialog {
             }
         };
 
-        ImageView closeButton = (ImageView) bottomView.findViewById(R.id.close);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hide();
-            }
-        });
+         closeButton = (ImageView) bottomView.findViewById(R.id.close);
 
-        totalPenyebaran = bottomView.findViewById(R.id.totalPenyebaran);
+        txtDate = bottomView.findViewById(R.id.dateSekarang);
+        totalPenyebaran = bottomView.findViewById(R.id.caseTotal);
         poinChanges = bottomView.findViewById(R.id.poinChanges);
-        skorSosilisasi = bottomView.findViewById(R.id.skorSosilisasi);
-        skorPreventif = bottomView.findViewById(R.id.skorPreventif);
-        skorFogging = bottomView.findViewById(R.id.skorFogging);
-        plusSosilisasi = bottomView.findViewById(R.id.plusSosialisasi);
-        plusPreventif = bottomView.findViewById(R.id.plusPreventif);
-        plusFogging = bottomView.findViewById(R.id.plusFogging);
-        minusSosilisasi = bottomView.findViewById(R.id.minusSosilisasi);
-        minusPreventif = bottomView.findViewById(R.id.minusPreventif);
-        minusFogging = bottomView.findViewById(R.id.minusFogging);
-        save = bottomView.findViewById(R.id.save);
+        skorSosilisasi = bottomView.findViewById(R.id.poinSosialisasi);
+        skorPreventif = bottomView.findViewById(R.id.poinPreventif);
+        skorFogging = bottomView.findViewById(R.id.poinFogging);
+        seekSosilisasi = bottomView.findViewById(R.id.seekbarSosialisasi);
+        seekPreventif = bottomView.findViewById(R.id.seekbarPreventif);
+        seekFogging = bottomView.findViewById(R.id.seekbarFogging);
+        contentLy = bottomView.findViewById(R.id.contentLy);
+        save = bottomView.findViewById(R.id.btn_save);
     }
 
 
@@ -120,51 +116,43 @@ public class ChoiceAction extends BottomSheetDialog {
         this.save = save;
     }
 
-    public Button getPlusSosilisasi() {
-        return plusSosilisasi;
+    public TextView getTxtDate() {
+        return txtDate;
     }
 
-    public void setPlusSosilisasi(Button plusSosilisasi) {
-        this.plusSosilisasi = plusSosilisasi;
+    public void setTxtDate(TextView txtDate) {
+        this.txtDate = txtDate;
     }
 
-    public Button getPlusPreventif() {
-        return plusPreventif;
+    public SeekBar getSeekSosilisasi() {
+        return seekSosilisasi;
     }
 
-    public void setPlusPreventif(Button plusPreventif) {
-        this.plusPreventif = plusPreventif;
+    public void setSeekSosilisasi(SeekBar seekSosilisasi) {
+        this.seekSosilisasi = seekSosilisasi;
     }
 
-    public Button getPlusFogging() {
-        return plusFogging;
+    public SeekBar getSeekPreventif() {
+        return seekPreventif;
     }
 
-    public void setPlusFogging(Button plusFogging) {
-        this.plusFogging = plusFogging;
+    public void setSeekPreventif(SeekBar seekPreventif) {
+        this.seekPreventif = seekPreventif;
     }
 
-    public Button getMinusSosilisasi() {
-        return minusSosilisasi;
+    public SeekBar getSeekFogging() {
+        return seekFogging;
     }
 
-    public void setMinusSosilisasi(Button minusSosilisasi) {
-        this.minusSosilisasi = minusSosilisasi;
+    public void setSeekFogging(SeekBar seekFogging) {
+        this.seekFogging = seekFogging;
     }
 
-    public Button getMinusPreventif() {
-        return minusPreventif;
+    public LinearLayout getContentLy() {
+        return contentLy;
     }
 
-    public void setMinusPreventif(Button minusPreventif) {
-        this.minusPreventif = minusPreventif;
-    }
-
-    public Button getMinusFogging() {
-        return minusFogging;
-    }
-
-    public void setMinusFogging(Button minusFogging) {
-        this.minusFogging = minusFogging;
+    public void setContentLy(LinearLayout contentLy) {
+        this.contentLy = contentLy;
     }
 }
