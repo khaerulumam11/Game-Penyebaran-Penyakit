@@ -21,7 +21,7 @@ public class ChoiceAction extends BottomSheetDialog {
     public TextView totalPenyebaran,poinChanges, skorSosilisasi, skorPreventif, skorFogging,save, txtDate;
     public SeekBar seekSosilisasi, seekPreventif, seekFogging;
     public LinearLayout contentLy;
-    ImageView closeButton;
+    public ImageView closeButton;
     @SuppressLint("StaticFieldLeak")
     private static ChoiceAction instance;
 
@@ -74,6 +74,14 @@ public class ChoiceAction extends BottomSheetDialog {
 
     public void setTotalPenyebaran(TextView totalPenyebaran) {
         this.totalPenyebaran = totalPenyebaran;
+    }
+
+    public ImageView getCloseButton() {
+        return closeButton;
+    }
+
+    public void setCloseButton(ImageView closeButton) {
+        this.closeButton = closeButton;
     }
 
     public TextView getPoinChanges() {

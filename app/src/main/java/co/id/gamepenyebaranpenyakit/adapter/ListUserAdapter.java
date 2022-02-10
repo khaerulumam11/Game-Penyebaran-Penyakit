@@ -49,7 +49,19 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.Commen
         } else {
             holder.txtLevel.setText("Level : Advance");
         }
-
+        if (position == 1){
+            holder.gambar.setImageResource(R.drawable.badgesatu);
+        } else if (position == 2){
+            holder.gambar.setImageResource(R.drawable.badgedua);
+        } else if (position == 3){
+            holder.gambar.setImageResource(R.drawable.badgetiga);
+        } else if (position == 4){
+            holder.gambar.setImageResource(R.drawable.badgeempat);
+        } else if (position == 5){
+            holder.gambar.setImageResource(R.drawable.badgelima);
+        } else {
+            holder.gambar.setImageResource(R.drawable.badgeenam);
+        }
         holder.txtScore.setText("Score : "+cur.getScore());
 //        Glide.with(con).load(cur.getAvatar()).
 //                apply(RequestOptions.circleCropTransform().placeholder(R.drawable.ic_account_circle_grey_24dp)).into(holder.gambar);
@@ -73,6 +85,7 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.Commen
             txtEmail = itemView.findViewById(R.id.txtEmail);
             txtScore = itemView.findViewById(R.id.txtScore);
             txtLevel = itemView.findViewById(R.id.txtLevel);
+            gambar = itemView.findViewById(R.id.logoBadge);
         }
     }
 }

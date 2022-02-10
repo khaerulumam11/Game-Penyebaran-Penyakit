@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Game Penyebaran Penyakit</string>
+    <string name="app_name">Dengue Buster</string>
     <string name="password">Password</string>
     <string name="desc_home">You are currently in a simulated world, an epidemic is attacking this world. \nHere you have to survive and save the world!</string>
 </resources>

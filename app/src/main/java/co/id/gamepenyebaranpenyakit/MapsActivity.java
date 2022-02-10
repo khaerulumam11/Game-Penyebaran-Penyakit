@@ -75,6 +75,7 @@ public class MapsActivity extends AppCompatActivity implements
     private static final PatternItem DOT = new Dot();
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
     private Polygon polygon1,polygon2,polygon3;
+    private GoogleMap maps;
     private ImageView imgBack;
     SharedPreferences sharedpreferences;
     private TextView txtLokasi;
@@ -218,6 +219,13 @@ public class MapsActivity extends AppCompatActivity implements
         choiceAction.totalPenyebaran.setText("Total Kasus : "+kasus);
         choiceAction.poinChanges.setText(""+changesPoin);
         choiceAction.seekSosilisasi.setMax(changesPoin);
+        choiceAction.closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choiceAction.hide();
+                choiceLy.setVisibility(View.VISIBLE);
+            }
+        });
         choiceAction.seekSosilisasi.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int valueProgress =0;
             @Override
@@ -358,15 +366,98 @@ public class MapsActivity extends AppCompatActivity implements
                     System.out.println("Total Skor "+totalSkor);
                 if (totalSkor == 100){
                     int chance = Integer.parseInt(getIntent().getStringExtra("chance")) + 10;
+                    updateMapColor(daerah, totalSkor);
                     updateDataScore(totalSkor, chance);
                 } else {
                     int chance = Integer.parseInt(getIntent().getStringExtra("chance")) + 3;
                     updateDataScore(totalSkor, chance);
+                    updateMapColor(daerah, totalSkor);
                 }
                 }
         });
         choiceAction.setCanceledOnTouchOutside(false);
         choiceAction.show();
+    }
+
+    private void updateMapColor(String daerah, int totalSkor) {
+        if (daerah.equalsIgnoreCase("alpha")){
+            if (totalSkor == 100){
+                Polygon polygon1 = maps.addPolygon(new PolygonOptions()
+                        .clickable(true)
+                        .add(
+                                new LatLng(-8.154984,112.588902),
+                                new LatLng(-8.183191,112.549935),
+                                new LatLng(-8.239428,112.636624),
+                                new LatLng(-8.205958, 112.649842)));
+                // Store a data object with the polygon, used here to indicate an arbitrary type.
+                polygon1.setTag("teta");
+                // [END maps_poly_activity_add_polygon]
+                // Style the polygon.
+                stylePolygon(polygon1);
+            } else if (totalSkor < 100 && totalSkor > 50){
+                Polygon polygon1 = maps.addPolygon(new PolygonOptions()
+                        .clickable(true)
+                        .add(
+                                new LatLng(-8.154984,112.588902),
+                                new LatLng(-8.183191,112.549935),
+                                new LatLng(-8.239428,112.636624),
+                                new LatLng(-8.205958, 112.649842)));
+                // Store a data object with the polygon, used here to indicate an arbitrary type.
+                polygon1.setTag("beta");
+                // [END maps_poly_activity_add_polygon]
+                // Style the polygon.
+                stylePolygon(polygon1);
+            } else {
+                Polygon polygon1 = maps.addPolygon(new PolygonOptions()
+                        .clickable(true)
+                        .add(
+                                new LatLng(-8.154984,112.588902),
+                                new LatLng(-8.183191,112.549935),
+                                new LatLng(-8.239428,112.636624),
+                                new LatLng(-8.205958, 112.649842)));
+                // Store a data object with the polygon, used here to indicate an arbitrary type.
+                polygon1.setTag("alpha");
+                // [END maps_poly_activity_add_polygon]
+                // Style the polygon.
+                stylePolygon(polygon1);
+            }
+        } else if (daerah.equalsIgnoreCase("beta")){
+            if (totalSkor == 100){
+                Polygon polygon2 = maps.addPolygon(new PolygonOptions()
+                        .clickable(true)
+                        .add(
+                                new LatLng(-8.216462, 112.588504),
+                                new LatLng(-8.230874, 112.605279),
+                                new LatLng(-8.2603437,112.6042053),
+                                new LatLng(-8.252492, 112.578939)));
+                // Store a data object with the polygon, used here to indicate an arbitrary type.
+                polygon2.setTag("teta");
+                stylePolygon(polygon2);
+            } else if (totalSkor < 100 && totalSkor > 50){
+                Polygon polygon2 = maps.addPolygon(new PolygonOptions()
+                        .clickable(true)
+                        .add(
+                                new LatLng(-8.216462, 112.588504),
+                                new LatLng(-8.230874, 112.605279),
+                                new LatLng(-8.2603437,112.6042053),
+                                new LatLng(-8.252492, 112.578939)));
+                // Store a data object with the polygon, used here to indicate an arbitrary type.
+                polygon2.setTag("beta");
+                stylePolygon(polygon2);
+            } else {
+                Polygon polygon2 = maps.addPolygon(new PolygonOptions()
+                        .clickable(true)
+                        .add(
+                                new LatLng(-8.216462, 112.588504),
+                                new LatLng(-8.230874, 112.605279),
+                                new LatLng(-8.2603437,112.6042053),
+                                new LatLng(-8.252492, 112.578939)));
+                // Store a data object with the polygon, used here to indicate an arbitrary type.
+                polygon2.setTag("alpha");
+                stylePolygon(polygon2);
+            }
+        }
+
     }
 
     private void updateDataScore(int totalSkor, int chance) {
@@ -473,7 +564,7 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         getDataCase();
-
+        maps = googleMap;
         Polygon polygon1 = googleMap.addPolygon(new PolygonOptions()
                 .clickable(true)
                 .add(
